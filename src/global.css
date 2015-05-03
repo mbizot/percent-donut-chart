@@ -1,0 +1,40 @@
+/*
+    SVG Style
+*/
+circle, path{
+    cursor: pointer;
+}
+.percent-text{
+    text-anchor: middle;
+    fill: #5cafd7;
+    font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+    font-size: 50px;
+}
+.inner-circle{
+    fill: white;
+}
+.arc-main{
+    fill: #0085c5;
+}
+.arc-background{
+    fill: #cde0f1;
+}
+/*
+    Global style
+*/
+body{
+    background: rgb(249, 249, 249);
+}
+.main-wrapper{
+    width: 600px;
+    margin: auto;
+}
+.main-wrapper h2{
+    text-align: center;
+    font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+    font-size: 35px;
+}
+.main-wrapper .percent-chart{
+    margin: 50px auto 0;
+    width: 300px;
+}
