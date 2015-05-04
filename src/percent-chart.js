@@ -1,8 +1,6 @@
 (function()
 {
-    // todo library with init and expend + rework D3
-
-    var TMPpercent = 49;
+    var TMPpercent = 78;
 
     var exploitableData = 360/100 * TMPpercent;
 
@@ -54,7 +52,17 @@
         .attr('y', 0)
         .attr('class', 'percent-text')
         .attr("dy", ".35em")
-        .text(TMPpercent + '%');
+        .text(0)
+        .transition()
+        .duration(config.duration)
+        .ease(config.easeAnimation)
+        .tween("text", function()
+        {
+            var i = d3.interpolate(this.textContent, TMPpercent);
+            return function(t) {
+                this.textContent = Math.round(i(t)) + '%';
+            };
+        });
 
     // draw arcs
     svg.append('path')
