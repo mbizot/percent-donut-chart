@@ -2,25 +2,30 @@
 {
     // todo library with init and expend + rework D3
 
-    var TMPpercent = 77;
+    var TMPpercent = 49;
 
     var exploitableData = 360/100 * TMPpercent;
 
     var config = {
         width: 300,
         height: 300,
-        start: 0
+        start: 0,
+        radial: false,
+        circle: true
     };
 
     var outerRadius = config.height / 2,
-        innerRadius = outerRadius / 2;
+        innerRadius = outerRadius / 2,
+        percentRadius = ((outerRadius - innerRadius)/100) * TMPpercent,
+        mainOuterRadius = (config.radial) ? innerRadius + percentRadius : outerRadius,
+        endAngle = (config.circle) ? exploitableData : 360;
 
     // define arcs
     var mainArc = d3.svg.arc()
         .innerRadius(innerRadius)
-        .outerRadius(outerRadius)
+        .outerRadius(mainOuterRadius)
         .startAngle(config.start)
-        .endAngle(exploitableData * (Math.PI/180)); // transform deg to rad
+        .endAngle(endAngle * (Math.PI/180)); // transform deg to rad
 
     var backgroundArc = d3.svg.arc()
         .innerRadius(innerRadius)
