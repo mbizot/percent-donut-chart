@@ -11,6 +11,7 @@
         radial: false,
         circle: true,
         duration: 1250,
+        animation: true,
         easeAnimation: 'bounce'
     };
 
@@ -51,42 +52,57 @@
         .attr('x', 0)
         .attr('y', 0)
         .attr('class', 'percent-text')
-        .attr("dy", ".35em")
-        .text(0)
-        .transition()
-        .duration(config.duration)
-        .ease(config.easeAnimation)
-        .tween("text", function()
-        {
-            var i = d3.interpolate(this.textContent, TMPpercent);
-            return function(t) {
-                this.textContent = Math.round(i(t)) + '%';
-            };
-        });
+        .attr("dy", ".35em");
 
     // draw arcs
     svg.append('path')
         .attr("d", backgroundArc)
         .attr('class', 'arc-background');
 
-    svg.append('path')
-        .data([{startAngle: config.start, endAngle: endAngle}])
-        .attr('class', 'arc-main')
-        .transition()
-        .duration(config.duration)
-        .ease(config.easeAnimation)
-        .attrTween("d", function (d)
-        {
-            var start = {
-                startAngle: config.start,
-                endAngle: config.start
-            };
+    var drawMainArc = svg.append('path')
+        .attr('class', 'arc-main');
 
-            var interpolate = d3.interpolate(start, d);
-            return function (t)
+
+
+    if (config.animation)
+    {
+        text.text(config.start)
+            .transition()
+            .duration(config.duration)
+            .ease(config.easeAnimation)
+            .tween("text", function()
             {
-                return mainArc(interpolate(t));
-            };
-        });
+                var i = d3.interpolate(this.textContent, TMPpercent);
+                return function(t) {
+                    this.textContent = Math.round(i(t)) + '%';
+                };
+            });
+
+        drawMainArc.data([{startAngle: config.start, endAngle: endAngle}])
+            .transition()
+            .duration(config.duration)
+            .ease(config.easeAnimation)
+            .attrTween("d", function (d)
+            {
+                var start = {
+                    startAngle: config.start,
+                    endAngle: config.start
+                };
+
+                var interpolate = d3.interpolate(start, d);
+                return function (t)
+                {
+                    return mainArc(interpolate(t));
+                };
+            });
+    }
+    else
+    {
+        text.text(TMPpercent + '%');
+
+        mainArc.startAngle(config.start)
+            .endAngle(endAngle);
+        drawMainArc.attr("d", mainArc)
+    }
 
 })();
