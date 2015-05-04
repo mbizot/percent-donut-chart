@@ -11,21 +11,21 @@
         height: 300,
         start: 0,
         radial: false,
-        circle: true
+        circle: true,
+        duration: 1250,
+        easeAnimation: 'bounce'
     };
 
     var outerRadius = config.height / 2,
         innerRadius = outerRadius / 2,
         percentRadius = ((outerRadius - innerRadius)/100) * TMPpercent,
         mainOuterRadius = (config.radial) ? innerRadius + percentRadius : outerRadius,
-        endAngle = (config.circle) ? exploitableData : 360;
+        endAngle = ((config.circle) ? exploitableData : 360) * (Math.PI/180);
 
     // define arcs
     var mainArc = d3.svg.arc()
         .innerRadius(innerRadius)
-        .outerRadius(mainOuterRadius)
-        .startAngle(config.start)
-        .endAngle(endAngle * (Math.PI/180)); // transform deg to rad
+        .outerRadius(mainOuterRadius);
 
     var backgroundArc = d3.svg.arc()
         .innerRadius(innerRadius)
@@ -46,7 +46,7 @@
         .attr('r', innerRadius)
         .attr('cx', 0)
         .attr('cy', 0)
-        .attr('class', 'inner-circle')
+        .attr('class', 'inner-circle');
 
     // add central text
     var text = svg.append('text')
@@ -62,7 +62,23 @@
         .attr('class', 'arc-background');
 
     svg.append('path')
-        .attr("d", mainArc)
-        .attr('class', 'arc-main');
+        .data([{startAngle: config.start, endAngle: endAngle}])
+        .attr('class', 'arc-main')
+        .transition()
+        .duration(config.duration)
+        .ease(config.easeAnimation)
+        .attrTween("d", function (d)
+        {
+            var start = {
+                startAngle: config.start,
+                endAngle: config.start
+            };
+
+            var interpolate = d3.interpolate(start, d);
+            return function (t)
+            {
+                return mainArc(interpolate(t));
+            };
+        });
 
 })();
